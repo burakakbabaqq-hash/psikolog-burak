@@ -449,17 +449,28 @@
   const zoomIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`
 
   ;(async () => {
-    const { data: files, error } = await supabase.storage
-      .from('gallery')
-      .list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } })
+    const [{ data: files, error }, siraResp] = await Promise.all([
+      supabase.storage.from('gallery').list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } }),
+      fetch('galeri-sira.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+    ])
 
     document.getElementById('gallery-loading')?.remove()
 
-    const fotos = (files || []).filter(f => f.name && !f.name.startsWith('.'))
+    const tumFotolar = (files || []).filter(f => f.name && !f.name.startsWith('.'))
 
-    if (error || !fotos.length) {
+    if (error || !tumFotolar.length) {
       grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8faa94;padding:60px 0;">Henüz fotoğraf eklenmemiş.</p>'
       return
+    }
+
+    // Sıralama dosyası varsa o sıraya göre, yoksa upload sırasına göre
+    let fotos
+    if (siraResp && Array.isArray(siraResp) && siraResp.length) {
+      const sirali = siraResp.map(ad => tumFotolar.find(f => f.name === ad)).filter(Boolean)
+      const fazlalar = tumFotolar.filter(f => !siraResp.includes(f.name))
+      fotos = [...sirali, ...fazlalar]
+    } else {
+      fotos = tumFotolar
     }
 
     fotos.forEach((f, i) => {

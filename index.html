@@ -1546,18 +1546,26 @@ document.querySelectorAll('a[href*="tel:"]').forEach(btn => {
   const grid     = document.getElementById('galeri-preview-grid')
 
   ;(async () => {
-    const { data: files } = await supabase.storage
-      .from('gallery')
-      .list('', { limit: 3, sortBy: { column: 'created_at', order: 'asc' } })
+    const [{ data: files }, siraResp] = await Promise.all([
+      supabase.storage.from('gallery').list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } }),
+      fetch('galeri-sira.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+    ])
 
     document.getElementById('galeri-preview-loading')?.remove()
 
-    const fotos = (files || []).filter(f => f.name && !f.name.startsWith('.')).slice(0, 3)
+    const tumFotolar = (files || []).filter(f => f.name && !f.name.startsWith('.'))
+    if (!tumFotolar.length) { grid.innerHTML = ''; return }
 
-    if (!fotos.length) {
-      grid.innerHTML = ''
-      return
+    let fotos
+    if (siraResp && Array.isArray(siraResp) && siraResp.length) {
+      const sirali = siraResp.map(ad => tumFotolar.find(f => f.name === ad)).filter(Boolean)
+      const fazlalar = tumFotolar.filter(f => !siraResp.includes(f.name))
+      fotos = [...sirali, ...fazlalar]
+    } else {
+      fotos = tumFotolar
     }
+
+    fotos = fotos.slice(0, 3)
 
     fotos.forEach(f => {
       const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name)
