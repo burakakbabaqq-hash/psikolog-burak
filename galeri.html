@@ -448,52 +448,52 @@
   const grid     = document.getElementById('gallery-grid')
   const zoomIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`
 
-  const { data: files, error } = await supabase.storage
-    .from('gallery')
-    .list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } })
+  ;(async () => {
+    const { data: files, error } = await supabase.storage
+      .from('gallery')
+      .list('', { limit: 100, sortBy: { column: 'created_at', order: 'asc' } })
 
-  document.getElementById('gallery-loading')?.remove()
+    document.getElementById('gallery-loading')?.remove()
 
-  if (error || !files || !files.filter(f => !f.name.startsWith('.')).length) {
-    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8faa94;padding:60px 0;">Henüz fotoğraf eklenmemiş.</p>'
-    return
-  }
+    const fotos = (files || []).filter(f => f.name && !f.name.startsWith('.'))
 
-  const fotos = files.filter(f => f.name && !f.name.startsWith('.'))
+    if (error || !fotos.length) {
+      grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#8faa94;padding:60px 0;">Henüz fotoğraf eklenmemiş.</p>'
+      return
+    }
 
-  fotos.forEach((f, i) => {
-    const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name)
-    const delay = i % 3 === 0 ? '' : i % 3 === 1 ? ' reveal-d1' : ' reveal-d2'
-    const div = document.createElement('div')
-    div.className = `gallery-item reveal${delay}`
-    div.dataset.index = i
-    div.innerHTML = `<img src="${publicUrl}" alt="Fotoğraf ${i + 1}" loading="lazy">
-      <div class="gallery-item-overlay"><div class="gallery-zoom-icon">${zoomIcon}</div></div>`
-    grid.appendChild(div)
-  })
+    fotos.forEach((f, i) => {
+      const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name)
+      const delay = i % 3 === 0 ? '' : i % 3 === 1 ? ' reveal-d1' : ' reveal-d2'
+      const div = document.createElement('div')
+      div.className = `gallery-item reveal${delay}`
+      div.dataset.index = i
+      div.innerHTML = `<img src="${publicUrl}" alt="Fotoğraf ${i + 1}" loading="lazy">
+        <div class="gallery-item-overlay"><div class="gallery-zoom-icon">${zoomIcon}</div></div>`
+      grid.appendChild(div)
+    })
 
-  // Lightbox'ı dinamik fotoğraflarla başlat
-  const galleryItems = grid.querySelectorAll('.gallery-item')
-  const lightboxSrcs = Array.from(galleryItems).map(el => ({ src: el.querySelector('img').src, alt: el.querySelector('img').alt }))
-  galleryItems.forEach((item, i) => item.addEventListener('click', () => {
-    const lb = document.getElementById('lightbox')
-    const img = document.getElementById('lb-img')
-    const counter = document.getElementById('lb-counter')
-    img.src = lightboxSrcs[i].src
-    img.alt = lightboxSrcs[i].alt
-    counter.textContent = `${i + 1} / ${lightboxSrcs.length}`
-    lb.classList.add('open')
-    document.body.style.overflow = 'hidden'
-    lb.dataset.current = i
-    lb.dataset.total = lightboxSrcs.length
-    lb.dataset.srcs = JSON.stringify(lightboxSrcs)
-  }))
+    const galleryItems = grid.querySelectorAll('.gallery-item')
+    const lightboxSrcs = Array.from(galleryItems).map(el => ({ src: el.querySelector('img').src, alt: el.querySelector('img').alt }))
 
-  // Reveal animasyonu
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) } })
-  }, { threshold: 0.1 })
-  items.forEach(el => io.observe(el))
+    galleryItems.forEach((item, i) => item.addEventListener('click', () => {
+      const lb      = document.getElementById('lightbox')
+      const img     = document.getElementById('lb-img')
+      const counter = document.getElementById('lb-counter')
+      img.src = lightboxSrcs[i].src
+      img.alt = lightboxSrcs[i].alt
+      counter.textContent = `${i + 1} / ${lightboxSrcs.length}`
+      lb.classList.add('open')
+      document.body.style.overflow = 'hidden'
+      lb.dataset.current = i
+      lb.dataset.srcs = JSON.stringify(lightboxSrcs)
+    }))
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) } })
+    }, { threshold: 0.1 })
+    galleryItems.forEach(el => io.observe(el))
+  })()
 </script>
 
 <script>
