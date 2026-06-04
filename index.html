@@ -1377,9 +1377,8 @@
         kaygi:'Kaygı', depresyon:'Depresyon', 'cift-terapisi':'Çift Terapisi',
         travma:'Travma', farkindalik:'Farkındalık', genel:'Genel Psikoloji'
       }
-      const delays = ['reveal', 'reveal reveal-d1', 'reveal reveal-d2']
       document.getElementById('ana-blog-grid').innerHTML = son3.map((y, i) => `
-        <article class="blog-card ${delays[i]}">
+        <article class="blog-card">
           <div class="blog-card-meta">
             <span class="blog-tag">${kategoriler[y.kategori] || 'Genel'}</span>
             ${y.tarih ? `<span class="blog-date">${new Date(y.tarih).toLocaleDateString('tr-TR', {year:'numeric',month:'long',day:'numeric'})}</span>` : ''}
