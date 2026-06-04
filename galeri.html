@@ -101,29 +101,27 @@
     .galeri-hero h1 { font-size: clamp(2.4rem, 6vw, 4rem); color: var(--cream); margin-bottom: 16px; }
     .galeri-hero p { font-size: 1.05rem; color: rgba(247,243,236,0.6); max-width: 480px; line-height: 1.8; }
 
-    /* Gallery Grid */
+    /* Gallery Grid — masonry (doğal oran) */
     .galeri-section { padding: var(--space-3xl) 0; background: var(--cream-alt); }
     .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 280px;
-      gap: var(--space-md);
+      columns: 3;
+      column-gap: var(--space-md);
     }
     .gallery-item {
+      break-inside: avoid;
+      margin-bottom: var(--space-md);
       border-radius: 20px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
     }
-    .gallery-item:nth-child(1) { grid-row: span 2; }
-    .gallery-item:nth-child(5) { grid-column: span 2; }
-    .gallery-item:nth-child(8) { grid-column: span 2; }
     .gallery-item img {
-      width: 100%; height: 100%;
-      object-fit: cover;
+      width: 100%;
+      height: auto;
+      display: block;
       transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-item:hover img { transform: scale(1.04); }
     .gallery-item::after {
       content: '';
       position: absolute; inset: 0;
@@ -133,7 +131,7 @@
     }
     .gallery-item:hover::after { opacity: 1; }
     .gallery-item-overlay {
-      position: absolute; bottom: 20px; left: 20px; z-index: 2;
+      position: absolute; bottom: 16px; left: 16px; z-index: 2;
       opacity: 0; transform: translateY(8px);
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
@@ -252,15 +250,12 @@
     @media (max-width: 768px) {
       .nav-links, .nav-right .btn-primary { display: none; }
       .hamburger { display: flex; }
-      .gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 220px; }
-      .gallery-item:nth-child(1) { grid-row: span 1; }
-      .gallery-item:nth-child(5) { grid-column: span 1; }
-      .gallery-item:nth-child(8) { grid-column: span 1; }
+      .gallery-grid { columns: 2; }
       .lightbox-prev { left: 8px; }
       .lightbox-next { right: 8px; }
     }
     @media (max-width: 480px) {
-      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 240px; }
+      .gallery-grid { columns: 1; }
     }
   </style>
 </head>
