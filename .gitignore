@@ -1,0 +1,13 @@
+.DS_Store
+.claude/
+*.md
+panel/
+panel.html
+panel.css
+panel.js
+panel-v2.html
+panel-v2.css
+panel-v2.js
+index-panel.html
+panel-config.json
+PANEL-V2.md
