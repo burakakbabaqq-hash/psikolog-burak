@@ -380,7 +380,7 @@
       }
 
       grid.innerHTML = yazilar.map(y => `
-        <a class="blog-card" href="blog/${y.slug}.html">
+        <a class="blog-card" href="blog-yazisi.html?slug=${y.slug}">
           <div class="blog-card-meta">
             <span class="blog-tag">${kategoriler[y.kategori] || y.kategori || 'Genel'}</span>
             ${y.tarih ? `<span class="blog-date">${new Date(y.tarih).toLocaleDateString('tr-TR', { year:'numeric', month:'long', day:'numeric' })}</span>` : ''}
