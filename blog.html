@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Burak Akbaba — Klinik Psikolog</title>
+  <meta name="description" content="Burak Akbaba'nın psikoloji, terapi ve ruh sağlığı üzerine yazdığı blog yazıları.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236b8f71'/><path d='M16 7 C11 10 8 14 8 18 C8 22 11 25 16 25 C21 25 24 22 24 18 C24 14 21 10 16 7Z' fill='%23f7f3ec' opacity='0.85'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #f7f3ec;
+      --cream-alt: #ede7d9;
+      --cream-dark: #e2d9c8;
+      --sage: #6b8f71;
+      --sage-light: #8faa94;
+      --sage-pale: #dce8dd;
+      --sage-dark: #4a6b50;
+      --deep: #2d3f2e;
+      --deep-light: #3d5440;
+      --earth: #8b6e52;
+      --text: #1e2620;
+      --text-muted: #5a6b5c;
+      --shadow-color: 45, 63, 46;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Figtree', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      transition: background 0.35s ease, box-shadow 0.35s ease, padding 0.3s ease;
+    }
+    nav.scrolled {
+      background: rgba(247, 243, 236, 0.94);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 1px 0 rgba(var(--shadow-color), 0.07);
+      padding: 12px 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--deep);
+    }
+    .nav-links { display: flex; list-style: none; gap: 32px; }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--deep); }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--deep);
+      color: var(--cream);
+      padding: 13px 26px;
+      border-radius: 100px;
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover { background: var(--deep-light); transform: translateY(-2px); }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--deep);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 99;
+      padding: 100px 32px 40px;
+      gap: 8px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      color: var(--deep);
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(var(--shadow-color), 0.08);
+    }
+    .mobile-wa {
+      margin-top: 24px;
+      background: #25D366;
+      color: #fff !important;
+      text-align: center;
+      padding: 16px !important;
+      border-radius: 100px;
+      border-bottom: none !important;
+      font-family: 'Figtree', sans-serif !important;
+      font-size: 1rem !important;
+      font-weight: 600;
+    }
+
+    /* HERO */
+    .blog-hero {
+      padding: 160px 0 80px;
+      background: var(--cream-alt);
+      position: relative;
+    }
+    .blog-hero-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      margin-bottom: 16px;
+    }
+    .blog-hero h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      color: var(--deep);
+      margin-bottom: 20px;
+    }
+    .blog-hero p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.75;
+    }
+
+    /* BLOG LİSTE */
+    .blog-section { padding: 80px 0 120px; }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .blog-card {
+      background: var(--cream-alt);
+      border-radius: 24px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.3s ease;
+      position: relative;
+    }
+    .blog-card:hover { transform: translateY(-5px); box-shadow: 0 8px 32px rgba(var(--shadow-color),0.08); }
+    .blog-card-meta { display: flex; align-items: center; gap: 10px; }
+    .blog-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--sage-dark);
+      background: var(--sage-pale);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .blog-date { font-size: 0.78rem; color: var(--text-muted); }
+    .blog-card h3 { font-size: 1.25rem; color: var(--deep); line-height: 1.3; flex: 1; }
+    .blog-read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--sage-dark);
+      transition: gap 0.2s ease, color 0.2s ease;
+    }
+    .blog-read-more:hover { gap: 10px; color: var(--deep); }
+    .blog-read-more svg { width: 14px; height: 14px; }
+
+    /* BOŞ DURUM */
+    .blog-empty {
+      text-align: center;
+      padding: 80px 0;
+      color: var(--text-muted);
+    }
+    .blog-empty h3 {
+      font-size: 1.8rem;
+      color: var(--deep);
+      margin-bottom: 12px;
+    }
+    .blog-empty p { font-size: 0.95rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--deep);
+      color: var(--cream);
+      padding: 60px 0 32px;
+    }
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: var(--cream);
+    }
+    .footer-copy { font-size: 0.72rem; color: rgba(247,243,236,0.28); }
+
+    /* FLOAT WA */
+    .float-wa {
+      position: fixed;
+      bottom: 22px; right: 22px;
+      z-index: 50;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      color: #fff;
+      transition: transform 0.3s cubic-bezier(0.34,1.3,0.64,1), box-shadow 0.3s ease;
+    }
+    .float-wa:hover { transform: scale(1.12); box-shadow: 0 8px 24px rgba(37,211,102,0.45); }
+    .float-wa svg { width: 26px; height: 26px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) {
+      .nav-links, .nav-right .btn-primary { display: none; }
+      .hamburger { display: flex; }
+      .blog-grid { grid-template-columns: 1fr; }
+      .blog-hero { padding: 120px 0 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Burak Akbaba</a>
+      <ul class="nav-links">
+        <li><a href="index.html#hakkimda">Hakkımda</a></li>
+        <li><a href="index.html#uzmanlik">Uzmanlık Alanlarım</a></li>
+        <li><a href="galeri.html">Galeri</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="index.html#iletisim">İletişim</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="https://wa.me/905334200544?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-primary">
+          Randevu Al
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Menüyü aç">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html#hakkimda" onclick="closeMenu()">Hakkımda</a>
+  <a href="index.html#uzmanlik" onclick="closeMenu()">Uzmanlık Alanlarım</a>
+  <a href="galeri.html" onclick="closeMenu()">Galeri</a>
+  <a href="blog.html" onclick="closeMenu()">Blog</a>
+  <a href="index.html#iletisim" onclick="closeMenu()">İletişim</a>
+  <a href="https://wa.me/905334200544?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" class="mobile-wa" onclick="closeMenu()">Randevu Al →</a>
+</div>
+
+<section class="blog-hero">
+  <div class="container">
+    <div class="blog-hero-label">Psikoloji & Ruh Sağlığı</div>
+    <h1>Blog</h1>
+    <p>Kaygı, depresyon, ilişkiler ve kişisel gelişim üzerine yazılar.</p>
+  </div>
+</section>
+
+<section class="blog-section">
+  <div class="container">
+    <div id="blog-grid" class="blog-grid">
+      <div class="blog-empty" style="grid-column:1/-1;">
+        <p style="color:var(--text-muted);font-size:0.9rem;">Yükleniyor...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Burak Akbaba</div>
+      <p class="footer-copy">© 2025 Burak Akbaba. Tüm hakları saklıdır.</p>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/905334200544?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" class="float-wa" aria-label="WhatsApp'tan iletişime geç">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // Nav scroll efekti
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30)
+  })
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger')
+  const mobileMenu = document.getElementById('mobile-menu')
+  hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'))
+  function closeMenu() { mobileMenu.classList.remove('open') }
+
+  // Blog listesi yükle
+  async function blogListesiYukle() {
+    const grid = document.getElementById('blog-grid')
+    try {
+      const res = await fetch('blog-index.json?t=' + Date.now())
+      if (!res.ok) throw new Error('not found')
+      const yazilar = await res.json()
+
+      if (!yazilar.length) {
+        grid.innerHTML = `<div class="blog-empty" style="grid-column:1/-1;">
+          <h3>Henüz yazı yok</h3>
+          <p>Yakında yeni yazılar eklenecek.</p>
+        </div>`
+        return
+      }
+
+      const kategoriler = {
+        kaygi: 'Kaygı', depresyon: 'Depresyon', 'cift-terapisi': 'Çift Terapisi',
+        travma: 'Travma', farkindalik: 'Farkındalık', genel: 'Genel Psikoloji'
+      }
+
+      grid.innerHTML = yazilar.map(y => `
+        <a class="blog-card" href="blog/${y.slug}.html">
+          <div class="blog-card-meta">
+            <span class="blog-tag">${kategoriler[y.kategori] || y.kategori || 'Genel'}</span>
+            ${y.tarih ? `<span class="blog-date">${new Date(y.tarih).toLocaleDateString('tr-TR', { year:'numeric', month:'long', day:'numeric' })}</span>` : ''}
+          </div>
+          <h3>${y.baslik || 'Başlıksız'}</h3>
+          <span class="blog-read-more">
+            Devamını Oku
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
+        </a>`).join('')
+    } catch {
+      grid.innerHTML = `<div class="blog-empty" style="grid-column:1/-1;">
+        <h3>Henüz yazı yok</h3>
+        <p>Yakında yeni yazılar eklenecek.</p>
+      </div>`
+    }
+  }
+
+  blogListesiYukle()
+</script>
+</body>
+</html>
