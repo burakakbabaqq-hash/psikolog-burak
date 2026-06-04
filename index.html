@@ -1075,16 +1075,8 @@
     <div class="section-eyebrow reveal">Çalışma Alanım</div>
     <h2 class="section-title reveal reveal-d1">Çalışma Ortamım</h2>
     <p class="section-sub reveal reveal-d2">Güvenli, sakin ve size ait bir alan sizi bekliyor.</p>
-    <div class="galeri-grid-preview reveal reveal-d1">
-      <div class="gp-item">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Terapi odası">
-      </div>
-      <div class="gp-item">
-        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80" alt="Dinlendirici çalışma köşesi">
-      </div>
-      <div class="gp-item">
-        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Huzurlu terapi ortamı">
-      </div>
+    <div class="galeri-grid-preview reveal reveal-d1" id="galeri-preview-grid">
+      <div id="galeri-preview-loading" style="grid-column:1/-1;text-align:center;color:#8faa94;padding:40px 0;font-size:0.9rem;">Yükleniyor...</div>
     </div>
     <div class="galeri-preview-cta reveal reveal-d2">
       <a href="galeri.html" class="btn-primary">Tüm Fotoğrafları Görüntüle</a>
@@ -1540,6 +1532,41 @@ document.querySelectorAll('a[href*="tel:"]').forEach(btn => {
     gtag('event', 'phone_click', {'event_category': 'lead', 'event_label': 'telefon_araması'});
   });
 });
+</script>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  // ── Her psikolog için bu iki satırı güncelle ──
+  const SUPABASE_URL      = 'https://bahfaaexoxjsaszyqslt.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhaGZhYWV4b3hqc2Fzenlxc2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODMzNzcsImV4cCI6MjA5NjE1OTM3N30.nMBNZwMJ1tCyt_2IdnbjevAAqElCstRAbd60W2zEdGE'
+  // ─────────────────────────────────────────────
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  const grid     = document.getElementById('galeri-preview-grid')
+
+  ;(async () => {
+    const { data: files } = await supabase.storage
+      .from('gallery')
+      .list('', { limit: 3, sortBy: { column: 'created_at', order: 'asc' } })
+
+    document.getElementById('galeri-preview-loading')?.remove()
+
+    const fotos = (files || []).filter(f => f.name && !f.name.startsWith('.')).slice(0, 3)
+
+    if (!fotos.length) {
+      grid.innerHTML = ''
+      return
+    }
+
+    fotos.forEach(f => {
+      const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(f.name)
+      const div = document.createElement('div')
+      div.className = 'gp-item'
+      div.innerHTML = `<img src="${publicUrl}" alt="Çalışma alanı fotoğrafı" loading="lazy">`
+      grid.appendChild(div)
+    })
+  })()
 </script>
 </body>
 </html>
