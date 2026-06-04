@@ -231,7 +231,13 @@
       if (articleContent) {
         icerik = articleContent.innerHTML
       } else if (articleTag) {
-        icerik = articleTag.innerHTML
+        // Panel'den üretilen yazılar — başlık ve tarih satırı hero'da gösteriliyor, buradan çıkar
+        const clone = articleTag.cloneNode(true)
+        const ilkH1 = clone.querySelector('h1')
+        if (ilkH1) ilkH1.remove()
+        const ilkP = clone.querySelector('p')
+        if (ilkP && ilkP.querySelector('time')) ilkP.remove()
+        icerik = clone.innerHTML
       } else {
         icerik = doc.body?.innerHTML || ''
       }
