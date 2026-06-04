@@ -933,6 +933,7 @@
         <li><a href="#galeri">Galeri</a></li>
         <li><a href="#seans">Seans Bilgisi</a></li>
         <li><a href="#iletisim">İletişim</a></li>
+        <li><a href="blog.html">Blog</a></li>
       </ul>
       <div class="nav-right">
         <a href="https://wa.me/905334200544?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-primary">
@@ -953,6 +954,7 @@
   <a href="#galeri" onclick="closeMenu()">Galeri</a>
   <a href="#seans" onclick="closeMenu()">Seans Bilgisi</a>
   <a href="#iletisim" onclick="closeMenu()">İletişim</a>
+  <a href="blog.html" onclick="closeMenu()">Blog</a>
   <a href="https://wa.me/905334200544?text=Merhaba%2C%20randevu%20almak%20istiyorum." target="_blank" rel="noopener" class="mobile-wa" onclick="closeMenu()">Randevu Al →</a>
 </div>
 
@@ -1316,14 +1318,14 @@
       <h2 class="section-title reveal reveal-d1">Okuma Köşesi</h2>
       <p class="section-sub reveal reveal-d2">Zihinsel sağlık, terapi süreci ve kendinizi daha iyi tanımak için yazılar.</p>
     </div>
-    <div class="blog-grid">
+    <div class="blog-grid" id="ana-blog-grid">
       <article class="blog-card reveal">
         <div class="blog-card-meta">
           <span class="blog-tag">Anksiyete</span>
           <span class="blog-date">15 Nisan 2025</span>
         </div>
         <h3>Panik Atak Nedir? Belirtileri, Nedenleri ve Terapi Süreci</h3>
-        <p>Kalp çarpıntısı, nefes darlığı, ölüm korkusu... Panik atak yaşayan biri için o anlar son derece gerçek ve korkutucudur. Peki panik atak tam olarak nedir?</p>
+        <p>Kalp çarpıntısı, nefes darlığı, ölüm korkusu... Panik atak yaşayan biri için o anlar son derece gerçek ve korkutucudur.</p>
         <a href="blog/panik-atak-nedir.html" class="blog-read-more">
           Devamını Oku
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -1354,8 +1356,43 @@
         </a>
       </article>
     </div>
+    <div style="text-align:center;margin-top:48px;">
+      <a href="blog.html" class="btn-ghost reveal">
+        Tüm Yazıları Gör
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
   </div>
 </section>
+<script>
+  // Blog bölümünü blog-index.json'dan güncelle (yeni yazılar varsa)
+  ;(async () => {
+    try {
+      const res = await fetch('blog-index.json?t=' + Date.now())
+      if (!res.ok) return
+      const yazilar = await res.json()
+      if (!yazilar || yazilar.length < 1) return
+      const son3 = yazilar.slice(0, 3)
+      const kategoriler = {
+        kaygi:'Kaygı', depresyon:'Depresyon', 'cift-terapisi':'Çift Terapisi',
+        travma:'Travma', farkindalik:'Farkındalık', genel:'Genel Psikoloji'
+      }
+      const delays = ['reveal', 'reveal reveal-d1', 'reveal reveal-d2']
+      document.getElementById('ana-blog-grid').innerHTML = son3.map((y, i) => `
+        <article class="blog-card ${delays[i]}">
+          <div class="blog-card-meta">
+            <span class="blog-tag">${kategoriler[y.kategori] || 'Genel'}</span>
+            ${y.tarih ? `<span class="blog-date">${new Date(y.tarih).toLocaleDateString('tr-TR', {year:'numeric',month:'long',day:'numeric'})}</span>` : ''}
+          </div>
+          <h3>${y.baslik || 'Başlıksız'}</h3>
+          <a href="blog/${y.slug}.html" class="blog-read-more">
+            Devamını Oku
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </article>`).join('')
+    } catch { /* Hata olursa hardcoded kartlar kalır */ }
+  })()
+</script>
 
 <!-- İletişim -->
 <section class="iletisim" id="iletisim">
